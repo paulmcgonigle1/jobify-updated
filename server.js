@@ -1,10 +1,24 @@
-import { value } from "./test-named.js"
-import randomValue from './test-default.js'
+import express from 'express'
+const app = express()
+import morgan from 'morgan';
 
 
-console.log('server is working')
+app.use(morgan('dev'))
+
+app.use(express.json())
+
+app.get('/', (req, res)=> {
+    res.send('Hello World');
+
+});
+
+app.post('/',  (req, res) => {
+    console.log(req);
+    res.json({message: 'data receieved', data: req.body})
+})
+
+app.listen(5100, ()=> {
+    console.log('server running... ')
+})
 
 
-
-console.log(value)
-console.log(randomValue)

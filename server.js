@@ -1,10 +1,14 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
-const app = express()
+import mongoose from 'mongoose';
 
+const app = express()
 //using morgan is middleware to help debug
 import morgan from 'morgan';
+
+//routers
+import jobRouter from './routes/jobRouter.js'
 
  if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
@@ -26,22 +30,7 @@ app.post('/',  (req, res) => {
     res.json({message: 'data receieved', data: req.body})
 })
 
-//get all jobs api
-app.get('/api/v1/jobs',);
-
-//CREATE JOB API
-app.post('/api/v1/jobs', );
-
-//GET SINGLE JOB
-app.get('/api/v1/jobs/:id', );
-//EDIT JOB
-
-app.patch('/api/v1/jobs/:id', )
-
-//Delete JOB
-
-app.delete('/api/v1/jobs/:id', );
-
+app.use('/api/v1/jobs', jobRouter)
 
 
 //if anybody tries to use resource that is not availabel
@@ -55,8 +44,15 @@ app.use((err, req,res,next) => {
 })
 const port = process.env.PORT || 5100
 
-app.listen(port, ()=> {
-    console.log(`server running on port ${port}  `)
-})
 
+//USING mongoose as an abstraction layer and then listening after that
+try {
+  await mongoose.connect(process.env.MONGO_URL);
+  app.listen(port, () => {
+    console.log(`server running on PORT ${port}....`);
+  });
+} catch (error) {
+  console.log(error);
+  process.exit(1);
+}
 

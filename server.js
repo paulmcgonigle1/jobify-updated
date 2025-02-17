@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
 import mongoose from 'mongoose';
-
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 const app = express()
 //using morgan is middleware to help debug
 import morgan from 'morgan';
@@ -18,6 +18,8 @@ import jobRouter from './routes/jobRouter.js'
  }
 
 app.use(express.json())
+
+app.use(errorHandlerMiddleware);
 
 
 

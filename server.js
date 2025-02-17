@@ -9,7 +9,6 @@ const app = express()
 //using morgan is middleware to help debug
 import morgan from 'morgan';
 
-import { validateTest } from './middleware/validationMiddleware.js';
 //routers
 import jobRouter from './routes/jobRouter.js'
 
@@ -29,12 +28,11 @@ app.get('/', (req, res)=> {
 
 });
 
-app.post('/api/v1/test', 
-  validateTest,
-(req, res) => {
-    const {name} = req.body
-    res.json({message: `hello ${name}`})
-})
+// app.post('/api/v1/test', 
+// (req, res) => {
+//     const {name} = req.body
+//     res.json({message: `hello ${name}`})
+// })
 
 app.use('/api/v1/jobs', jobRouter)
 

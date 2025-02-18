@@ -60,6 +60,11 @@ export const validateRegisterInput = withValidationErrors([
   body('lastName').notEmpty().withMessage('last name is required'),
 ]);
 
+export const validateLoginInput = withValidationErrors([
+  body('email').notEmpty().withMessage('email is required').isEmail().withMessage('needs to be in email format'),
+  body('password').notEmpty().withMessage('need a password')
+])
+
  export const validateIdParam = withValidationErrors([
   param('id').custom(async (value) => {
     const isValidId = mongoose.Types.ObjectId.isValid(value)

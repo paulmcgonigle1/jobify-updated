@@ -11,6 +11,7 @@ import morgan from 'morgan';
 
 //routers
 import jobRouter from './routes/jobRouter.js'
+import authRouter from './routes/authRouter.js'
 
  if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
@@ -35,6 +36,8 @@ app.get('/', (req, res)=> {
 // })
 
 app.use('/api/v1/jobs', jobRouter)
+app.use('/api/v1/auth', authRouter)
+
 
 
 //if anybody tries to use resource that is not availabel

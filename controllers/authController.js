@@ -1,36 +1,41 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/UserModel.js';
-import  bcrypt  from 'bcryptjs';
 import { UnauthenticatedError } from '../errors/customErrors.js';
-import { comparePassword } from '../utils/passwordUtils.js';
+import { hashPassword, comparePassword } from '../utils/passwordUtils.js';
+import { createJWT } from '../utils/tokenUtils.js';
 export const register = async (req, res) => {
-
-  //checking if its first account created then its an admin
-  const isFirstAccount = await User.countDocuments() === 0
-  req.body.role = isFirstAccount?'admin':'user';
-
-  // a random value that is added to the password before hashing
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const hashedPassword = await hashPassword(req.body.password);
   req.body.password = hashedPassword;
+
   const user = await User.create(req.body);
   res.status(StatusCodes.CREATED).json({ msg: 'user created' });
 };
 
+export const login = async (req, res) => {
+
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    throw new UnauthenticatedError('invalid credentials');
+  }
 
 
-export const login = async(req, res) => {
+  const isPasswordCorrect = await comparePassword(req.body.password, user.password);
 
-    const user = await User.findOne({email: req.body.email});
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError('invalid credentials');
+  }
+  const token = createJWT({ userId: user._id, role: user.role });
 
-    const validUser = user & await comparePassword(
-      req.body.password,
-      user.password
-    )
-    if(!validUser) throw new UnauthenticatedError('invalid credentials');
+  const oneDay = 1000 * 60 * 60 * 24;
 
+res.cookie('token', token, {
+  httpOnly: true,
+  expires: new Date(Date.now() + oneDay),
+  secure: process.env.NODE_ENV === 'production',
+});
 
-    res.send('login')
-   
-    
-}
+res.status(StatusCodes.CREATED).json({ msg: 'user logged in' });
+
+  
+};

@@ -5,6 +5,9 @@ dotenv.config()
 import express from 'express'
 import mongoose from 'mongoose';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+
+import authenticateUser from './middleware/authMiddleware.js';
+
 const app = express()
 //using morgan is middleware to help debug
 import morgan from 'morgan';
@@ -35,7 +38,7 @@ app.get('/', (req, res)=> {
 //     res.json({message: `hello ${name}`})
 // })
 
-app.use('/api/v1/jobs', jobRouter)
+app.use('/api/v1/jobs',authenticateUser, jobRouter)
 app.use('/api/v1/auth', authRouter)
 
 

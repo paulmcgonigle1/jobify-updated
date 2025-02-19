@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 import authenticateUser from './middleware/authMiddleware.js';
-
+import cookieParser from 'cookie-parser';
 const app = express()
 //using morgan is middleware to help debug
 import morgan from 'morgan';
@@ -21,9 +21,9 @@ import authRouter from './routes/authRouter.js'
 
  }
 
-app.use(express.json())
+app.use(express.json());
 
-
+app.use(cookieParser());//allows us to read cookes npm i cookie-parser
 
 
 

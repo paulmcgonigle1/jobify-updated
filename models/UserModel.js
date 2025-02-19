@@ -20,4 +20,10 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+//basically if i call this schema but then for that instantce i do .toJSON it wont give back the password
+UserSchema.methods.toJSON = function(){
+  let obj = this.toObject();
+  delete obj.password;
+  return obj;
+}
 export default mongoose.model('User', UserSchema);

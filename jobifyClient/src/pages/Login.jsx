@@ -16,9 +16,9 @@ const Login = () => {
           explore the app
         </button>
         <p>
-          Already a member?
-          <Link to="/login" className="member-btn">
-            Login
+          Not registered yet?
+          <Link to="/register" className="member-btn">
+            Register
           </Link>
         </p>
       </form>
